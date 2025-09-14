@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  /* Primary Colors */
+  --warm-brown: #8B4513;
+  --cream: #F5F5DC;
+  --sage-green: #9CAF88;
+  
+  /* Secondary Colors */
+  --deep-forest: #2D5016;
+  --golden-amber: #DAA520;
+  --charcoal: #36454F;
+  --soft-gray: #E5E5E5;
+  
+  /* Neutral Colors */
+  --pure-white: #FFFFFF;
+  --light-gray: #F8F9FA;
+  --medium-gray: #6C757D;
+  --dark-gray: #343A40;
+}
+
+@theme inline {
+  /* Colors */
+  --color-primary: #8B4513;
+  --color-secondary: #9CAF88;
+  --color-accent: #DAA520;
+  --color-cream: #F5F5DC;
+  --color-deep-forest: #2D5016;
+  --color-charcoal: #36454F;
+  --color-soft-gray: #E5E5E5;
+  --color-pure-white: #FFFFFF;
+  --color-light-gray: #F8F9FA;
+  --color-medium-gray: #6C757D;
+  --color-dark-gray: #343A40;
+  
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+body {
+  background-color: #F5F5DC;
+  color: #36454F;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom utility classes */
+.text-primary {
+  color: #8B4513;
+}
+
+.text-secondary {
+  color: #9CAF88;
+}
+
+.text-accent {
+  color: #DAA520;
+}
+
+.bg-primary {
+  background-color: #8B4513;
+}
+
+.bg-secondary {
+  background-color: #9CAF88;
+}
+
+.bg-accent {
+  background-color: #DAA520;
+}
+
+.bg-cream {
+  background-color: #F5F5DC;
+}
+
+.bg-deep-forest {
+  background-color: #2D5016;
+}
+
+.bg-charcoal {
+  background-color: #36454F;
+}
+
+.bg-pure-white {
+  background-color: #FFFFFF;
+}
+
+.bg-light-gray {
+  background-color: #F8F9FA;
+}
+
+.text-deep-forest {
+  color: #2D5016;
+}
+
+.text-charcoal {
+  color: #36454F;
+}
+
+.text-pure-white {
+  color: #FFFFFF;
+}
+
+.text-light-gray {
+  color: #F8F9FA;
+}
+
+.font-serif {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.shadow-card {
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+}
+
+/* Focus styles for accessibility */
+*:focus {
+  outline: 2px solid #DAA520;
+  outline-offset: 2px;
+}
+
+/* Smooth transitions for interactive elements only */
+button, a, input, select, textarea, [role="button"] {
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
