@@ -32,7 +32,6 @@ if (!process.env.POSTGRES_URL) {
 export const authConfig = {
   pages: {
     signIn: '/login',
-    signUp: '/register',
   },
   secret: process.env.AUTH_SECRET,
   trustHost: true, // Trust all hosts in development

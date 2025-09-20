@@ -1,21 +1,18 @@
 import postgres from 'postgres';
 import {
   User,
-  Product,
   ProductWithDetails,
+  ProductImage,
+  ProductVariant,
   Category,
   ArtisanProfile,
-  Order,
-  OrderWithItems,
-  Review,
   ReviewWithUser,
-  CartItem,
   CartItemWithProduct,
   ProductFilters,
   ProductSort,
   PaginatedResult
 } from './definitions';
-import { formatCurrency, getPaginationInfo } from './utils';
+import { getPaginationInfo } from './utils';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -82,8 +79,8 @@ export async function getProducts(
     const offset = (page - 1) * perPage;
     
     // Build WHERE conditions
-    let whereConditions = ['p.is_active = true'];
-    const params: any[] = [];
+    const whereConditions: string[] = ['p.is_active = true'];
+    const params: (string | number | boolean)[] = [];
     
     if (filters.category_id) {
       whereConditions.push('p.category_id = $' + (params.length + 1));
@@ -175,7 +172,12 @@ export async function getProducts(
 
     return {
       data: products,
-      meta: paginationInfo
+      meta: {
+        current_page: paginationInfo.currentPage,
+        per_page: paginationInfo.perPage,
+        total_count: paginationInfo.totalCount,
+        total_pages: paginationInfo.totalPages,
+      }
     };
   } catch (error) {
     console.error('Database Error:', error);
@@ -229,14 +231,14 @@ export async function getProductBySlug(slug: string): Promise<ProductWithDetails
     if (!products[0]) return undefined;
 
     // Get product images
-    const images = await sql`
+    const images = await sql<ProductImage[]>`
       SELECT * FROM product_images 
       WHERE product_id = ${products[0].id} 
       ORDER BY sort_order ASC
     `;
 
     // Get product variants
-    const variants = await sql`
+    const variants = await sql<ProductVariant[]>`
       SELECT * FROM product_variants 
       WHERE product_id = ${products[0].id}
       ORDER BY name ASC
@@ -340,7 +342,12 @@ export async function getProductReviews(
 
     return {
       data: reviews,
-      meta: paginationInfo
+      meta: {
+        current_page: paginationInfo.currentPage,
+        per_page: paginationInfo.perPage,
+        total_count: paginationInfo.totalCount,
+        total_pages: paginationInfo.totalPages,
+      }
     };
   } catch (error) {
     console.error('Database Error:', error);
@@ -413,7 +420,12 @@ export async function searchProducts(
 
     return {
       data: products,
-      meta: paginationInfo
+      meta: {
+        current_page: paginationInfo.currentPage,
+        per_page: paginationInfo.perPage,
+        total_count: paginationInfo.totalCount,
+        total_pages: paginationInfo.totalPages,
+      }
     };
   } catch (error) {
     console.error('Database Error:', error);

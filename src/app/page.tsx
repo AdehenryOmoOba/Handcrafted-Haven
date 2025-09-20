@@ -121,7 +121,7 @@ export default function Home() {
               Why Choose Handcrafted Haven?
             </h2>
             <p className="text-lg text-charcoal max-w-2xl mx-auto">
-              We're more than just a marketplace - we're a community celebrating craftsmanship
+              We&apos;re more than just a marketplace - we&apos;re a community celebrating craftsmanship
             </p>
           </div>
           

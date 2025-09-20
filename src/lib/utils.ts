@@ -107,7 +107,7 @@ export const getPaginationInfo = (
 /**
  * Debounce function
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => ReturnType<T>>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
