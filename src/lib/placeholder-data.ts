@@ -75,7 +75,7 @@ const categories = [
     sort_order: 3,
   },
   {
-    id: '4d5e6f7g-4444-5555-6666-777777777777',
+    id: '4d5e6f70-4444-5555-6666-777777777777',
     name: 'Woodwork',
     slug: 'woodwork',
     description: 'Custom wooden furniture, cutting boards, and decorative pieces',
@@ -85,7 +85,7 @@ const categories = [
     sort_order: 4,
   },
   {
-    id: '5e6f7g8h-5555-6666-7777-888888888888',
+    id: '5e6f7080-5555-6666-7777-888888888888',
     name: 'Art & Decor',
     slug: 'art-decor',
     description: 'Original paintings, prints, sculptures, and home decor',
@@ -129,7 +129,7 @@ const artisanProfiles = [
 
 const products = [
   {
-    id: 'p1a2b3c4-1111-2222-3333-444444444444',
+    id: '01a2b3c4-1111-2222-3333-444444444444',
     artisan_id: 'a1b2c3d4-1111-2222-3333-444444444444',
     category_id: '1a2b3c4d-1111-2222-3333-444444444444',
     name: 'Handcrafted Silver Ring with Turquoise',
@@ -153,7 +153,7 @@ const products = [
     seo_description: 'Beautiful handcrafted sterling silver ring with natural turquoise stone. Made to order with quality craftsmanship.',
   },
   {
-    id: 'p2b3c4d5-2222-3333-4444-555555555555',
+    id: '02b3c4d5-2222-3333-4444-555555555555',
     artisan_id: 'b2c3d4e5-2222-3333-4444-555555555555',
     category_id: '2b3c4d5e-2222-3333-4444-555555555555',
     name: 'Ceramic Coffee Mug Set',
@@ -177,7 +177,7 @@ const products = [
     seo_description: 'Beautiful handthrown ceramic coffee mug set. Perfect for coffee lovers who appreciate handmade pottery.',
   },
   {
-    id: 'p3c4d5e6-3333-4444-5555-666666666666',
+    id: '03c4d5e6-3333-4444-5555-666666666666',
     artisan_id: 'a1b2c3d4-1111-2222-3333-444444444444',
     category_id: '1a2b3c4d-1111-2222-3333-444444444444',
     name: 'Minimalist Silver Earrings',
@@ -201,7 +201,7 @@ const products = [
     seo_description: 'Simple and elegant handmade sterling silver drop earrings. Perfect for everyday wear.',
   },
   {
-    id: 'p4d5e6f7-4444-5555-6666-777777777777',
+    id: '04d5e6f0-4444-5555-6666-777777777777',
     artisan_id: 'b2c3d4e5-2222-3333-4444-555555555555',
     category_id: '2b3c4d5e-2222-3333-4444-555555555555',
     name: 'Decorative Ceramic Vase',
@@ -229,16 +229,16 @@ const products = [
 const productImages = [
   // Silver Ring images
   {
-    id: 'img1-p1a2b3c4-1111-2222-3333-444444444444',
-    product_id: 'p1a2b3c4-1111-2222-3333-444444444444',
+    id: '11a2b3c4-1111-2222-3333-444444444444',
+    product_id: '01a2b3c4-1111-2222-3333-444444444444',
     url: '/products/silver-ring-turquoise-1.jpg',
     alt_text: 'Handcrafted silver ring with turquoise stone - front view',
     sort_order: 1,
     is_primary: true,
   },
   {
-    id: 'img2-p1a2b3c4-1111-2222-3333-444444444444',
-    product_id: 'p1a2b3c4-1111-2222-3333-444444444444',
+    id: '12a2b3c4-1111-2222-3333-444444444444',
+    product_id: '01a2b3c4-1111-2222-3333-444444444444',
     url: '/products/silver-ring-turquoise-2.jpg',
     alt_text: 'Handcrafted silver ring with turquoise stone - side view',
     sort_order: 2,
@@ -247,8 +247,8 @@ const productImages = [
   
   // Coffee Mug Set images
   {
-    id: 'img1-p2b3c4d5-2222-3333-4444-555555555555',
-    product_id: 'p2b3c4d5-2222-3333-4444-555555555555',
+    id: '21b3c4d5-2222-3333-4444-555555555555',
+    product_id: '02b3c4d5-2222-3333-4444-555555555555',
     url: '/products/ceramic-mug-set-1.jpg',
     alt_text: 'Ceramic coffee mug set - two mugs on table',
     sort_order: 1,
@@ -257,8 +257,8 @@ const productImages = [
   
   // Silver Earrings images
   {
-    id: 'img1-p3c4d5e6-3333-4444-5555-666666666666',
-    product_id: 'p3c4d5e6-3333-4444-5555-666666666666',
+    id: '31c4d5e6-3333-4444-5555-666666666666',
+    product_id: '03c4d5e6-3333-4444-5555-666666666666',
     url: '/products/silver-earrings-minimal-1.jpg',
     alt_text: 'Minimalist silver drop earrings',
     sort_order: 1,
@@ -267,8 +267,8 @@ const productImages = [
   
   // Ceramic Vase images
   {
-    id: 'img1-p4d5e6f7-4444-5555-6666-777777777777',
-    product_id: 'p4d5e6f7-4444-5555-6666-777777777777',
+    id: '41d5e6f0-4444-5555-6666-777777777777',
+    product_id: '04d5e6f0-4444-5555-6666-777777777777',
     url: '/products/ceramic-vase-decorative-1.jpg',
     alt_text: 'Decorative ceramic vase with hand-painted details',
     sort_order: 1,
@@ -278,8 +278,8 @@ const productImages = [
 
 const reviews = [
   {
-    id: 'r1a2b3c4-1111-2222-3333-444444444444',
-    product_id: 'p1a2b3c4-1111-2222-3333-444444444444',
+    id: '91a2b3c4-1111-2222-3333-444444444444',
+    product_id: '01a2b3c4-1111-2222-3333-444444444444',
     user_id: '76d65c26-f784-44a2-ac19-586678f7c2f2',
     order_item_id: null,
     rating: 5,
@@ -291,8 +291,8 @@ const reviews = [
     status: 'approved',
   },
   {
-    id: 'r2b3c4d5-2222-3333-4444-555555555555',
-    product_id: 'p2b3c4d5-2222-3333-4444-555555555555',
+    id: '92b3c4d5-2222-3333-4444-555555555555',
+    product_id: '02b3c4d5-2222-3333-4444-555555555555',
     user_id: 'CC27C14A-0ACF-4F4A-A6C9-D45682C144B9',
     order_item_id: null,
     rating: 4,
@@ -307,7 +307,7 @@ const reviews = [
 
 const newsletters = [
   {
-    id: 'n1a2b3c4-1111-2222-3333-444444444444',
+    id: '81a2b3c4-1111-2222-3333-444444444444',
     email: 'newsletter@example.com',
     status: 'active',
   },

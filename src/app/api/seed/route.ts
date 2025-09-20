@@ -34,8 +34,7 @@ async function seedUsers(tx: ReturnType<typeof postgres>) {
       const hashedPassword = await bcrypt.hash(user.password, 10);
       return tx`
         INSERT INTO users (id, name, email, password, role, email_verified)
-        VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword}, ${user.role}, ${user.email_verified})
-        ON CONFLICT (id) DO NOTHING;
+        VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword}, ${user.role}, ${user.email_verified});
       `;
     }),
   );
@@ -69,8 +68,7 @@ async function seedUserProfiles(tx: ReturnType<typeof postgres>) {
   const insertedProfiles = await Promise.all(
     profiles.map((profile) => tx`
       INSERT INTO user_profiles (user_id, bio, location)
-      VALUES (${profile.user_id}, ${profile.bio}, ${profile.location})
-      ON CONFLICT (user_id) DO NOTHING;
+      VALUES (${profile.user_id}, ${profile.bio}, ${profile.location});
     `)
   );
 
@@ -98,8 +96,7 @@ async function seedCategories(tx: ReturnType<typeof postgres>) {
   const insertedCategories = await Promise.all(
     categories.map((category) => tx`
       INSERT INTO categories (id, name, slug, description, parent_id, image_url, is_active, sort_order)
-      VALUES (${category.id}, ${category.name}, ${category.slug}, ${category.description}, ${category.parent_id}, ${category.image_url}, ${category.is_active}, ${category.sort_order})
-      ON CONFLICT (id) DO NOTHING;
+      VALUES (${category.id}, ${category.name}, ${category.slug}, ${category.description}, ${category.parent_id}, ${category.image_url}, ${category.is_active}, ${category.sort_order});
     `)
   );
 
@@ -132,8 +129,7 @@ async function seedArtisanProfiles(tx: ReturnType<typeof postgres>) {
   const insertedProfiles = await Promise.all(
     artisanProfiles.map((profile) => tx`
       INSERT INTO artisan_profiles (id, user_id, business_name, description, specialties, years_experience, website_url, instagram_handle, facebook_url, is_verified, verification_date, featured)
-      VALUES (${profile.id}, ${profile.user_id}, ${profile.business_name}, ${profile.description}, ${profile.specialties}, ${profile.years_experience}, ${profile.website_url}, ${profile.instagram_handle}, ${profile.facebook_url}, ${profile.is_verified}, ${profile.verification_date}, ${profile.featured})
-      ON CONFLICT (id) DO NOTHING;
+      VALUES (${profile.id}, ${profile.user_id}, ${profile.business_name}, ${profile.description}, ${profile.specialties}, ${profile.years_experience}, ${profile.website_url}, ${profile.instagram_handle}, ${profile.facebook_url}, ${profile.is_verified}, ${profile.verification_date}, ${profile.featured});
     `)
   );
 
@@ -176,8 +172,7 @@ async function seedProducts(tx: ReturnType<typeof postgres>) {
   const insertedProducts = await Promise.all(
     products.map((product) => tx`
       INSERT INTO products (id, artisan_id, category_id, name, slug, description, price, compare_at_price, cost_price, sku, inventory_quantity, low_stock_threshold, weight, dimensions, materials, colors, sizes, tags, is_active, is_featured, seo_title, seo_description)
-      VALUES (${product.id}, ${product.artisan_id}, ${product.category_id}, ${product.name}, ${product.slug}, ${product.description}, ${product.price}, ${product.compare_at_price}, ${product.cost_price}, ${product.sku}, ${product.inventory_quantity}, ${product.low_stock_threshold}, ${product.weight}, ${product.dimensions}, ${product.materials}, ${product.colors}, ${product.sizes}, ${product.tags}, ${product.is_active}, ${product.is_featured}, ${product.seo_title}, ${product.seo_description})
-      ON CONFLICT (id) DO NOTHING;
+      VALUES (${product.id}, ${product.artisan_id}, ${product.category_id}, ${product.name}, ${product.slug}, ${product.description}, ${product.price}, ${product.compare_at_price}, ${product.cost_price}, ${product.sku}, ${product.inventory_quantity}, ${product.low_stock_threshold}, ${product.weight}, ${product.dimensions}, ${product.materials}, ${product.colors}, ${product.sizes}, ${product.tags}, ${product.is_active}, ${product.is_featured}, ${product.seo_title}, ${product.seo_description});
     `)
   );
 
@@ -202,8 +197,7 @@ async function seedProductImages(tx: ReturnType<typeof postgres>) {
   const insertedImages = await Promise.all(
     productImages.map((image) => tx`
       INSERT INTO product_images (id, product_id, url, alt_text, sort_order, is_primary)
-      VALUES (${image.id}, ${image.product_id}, ${image.url}, ${image.alt_text}, ${image.sort_order}, ${image.is_primary})
-      ON CONFLICT (id) DO NOTHING;
+      VALUES (${image.id}, ${image.product_id}, ${image.url}, ${image.alt_text}, ${image.sort_order}, ${image.is_primary});
     `)
   );
 
@@ -235,8 +229,7 @@ async function seedReviews(tx: ReturnType<typeof postgres>) {
   const insertedReviews = await Promise.all(
     reviews.map((review) => tx`
       INSERT INTO reviews (id, product_id, user_id, order_item_id, rating, title, comment, is_verified_purchase, is_featured, helpful_count, status)
-      VALUES (${review.id}, ${review.product_id}, ${review.user_id}, ${review.order_item_id}, ${review.rating}, ${review.title}, ${review.comment}, ${review.is_verified_purchase}, ${review.is_featured}, ${review.helpful_count}, ${review.status})
-      ON CONFLICT (id) DO NOTHING;
+      VALUES (${review.id}, ${review.product_id}, ${review.user_id}, ${review.order_item_id}, ${review.rating}, ${review.title}, ${review.comment}, ${review.is_verified_purchase}, ${review.is_featured}, ${review.helpful_count}, ${review.status});
     `)
   );
 
@@ -258,8 +251,7 @@ async function seedNewsletterSubscriptions(tx: ReturnType<typeof postgres>) {
   const insertedNewsletters = await Promise.all(
     newsletters.map((newsletter) => tx`
       INSERT INTO newsletter_subscriptions (id, email, status)
-      VALUES (${newsletter.id}, ${newsletter.email}, ${newsletter.status})
-      ON CONFLICT (id) DO NOTHING;
+      VALUES (${newsletter.id}, ${newsletter.email}, ${newsletter.status});
     `)
   );
 
