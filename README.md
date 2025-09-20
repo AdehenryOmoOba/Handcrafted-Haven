@@ -61,13 +61,6 @@ Handcrafted Haven aims to revolutionize the way handcrafted items are discovered
 - **Branding**: Consistent color scheme, typography, and layout
 - **Navigation**: Clear and intuitive navigation structure
 
-## Development Team
-
-*Please add your group member names here:*
-- [Group Member 1 Name]
-- [Group Member 2 Name]
-- [Group Member 3 Name]
-- [Group Member 4 Name]
 
 ## Getting Started
 
