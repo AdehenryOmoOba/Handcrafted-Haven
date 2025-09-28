@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { artisanProfiles, users, products, productImages, reviews, categories } from '@/lib/placeholder-data';
+import { artisanProfiles, users, products, reviews, categories } from '@/lib/placeholder-data';
+import type { Product } from '@/lib/definitions';
 
 // Helper to get Unsplash fallback image by category
 function getUnsplashImage(categoryId: string) {
@@ -24,7 +25,7 @@ function getUnsplashImage(categoryId: string) {
 }
 
 // Custom image logic for specific products and classes
-function getCustomImage(product: any) {
+function getCustomImage(product: Pick<Product, 'name' | 'description'>) {
   const nameDesc = (product.name + ' ' + product.description).toLowerCase();
   
   // Specific product images
@@ -58,7 +59,7 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
   const artisanReviews = reviews.filter((r) => artisanProductIds.includes(r.product_id));
 
   // Use custom image for 'Handcrafted' or 'Minimalist', else Unsplash
-  function getPrimaryImage(product: any) {
+  function getPrimaryImage(product: Pick<Product, 'name' | 'description' | 'category_id'>) {
     const custom = getCustomImage(product);
     if (custom) return custom;
     return getUnsplashImage(product.category_id);
