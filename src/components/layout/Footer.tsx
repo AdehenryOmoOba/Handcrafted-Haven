@@ -1,4 +1,30 @@
+"use client";
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+
+const CurrentDateTime = () => {
+  const [currentTime, setCurrentTime] = useState<Date | null>(null);
+
+  useEffect(() => {
+    setCurrentTime(new Date());
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // Show nothing until client-side rendering
+  if (!currentTime) {
+    return null;
+  }
+
+  return (
+    <>
+      {currentTime.getFullYear()} {currentTime.toLocaleDateString()} {currentTime.toLocaleTimeString()}
+    </>
+  );
+};
 
 export default function Footer() {
   return (
@@ -149,7 +175,7 @@ export default function Footer() {
         <div className="border-t border-sage-green mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-light-gray text-sm">
-              © 2024 Handcrafted Haven. All rights reserved.
+              © <CurrentDateTime /> Handcrafted Haven. All rights reserved.
             </div>
             <div className="flex space-x-6">
               <Link href="/privacy" className="text-light-gray hover:text-accent transition-colors duration-200 text-sm">
