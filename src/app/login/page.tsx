@@ -145,13 +145,13 @@ export default function LoginPage() {
         </div>
 
         <div className="text-center mt-6">
-          <p className="text-charcoal text-sm">
-            Don't have an account?{' '}
-            <Link href="/register" className="font-medium text-primary hover:text-deep-forest transition-colors duration-200">
-              Create one
-            </Link>
-          </p>
-        </div>
+  <p className="text-charcoal text-sm">
+    Don{`'`}t have an account?{' '}
+    <Link href="/register" className="font-medium text-primary hover:text-deep-forest transition-colors duration-200">
+      Create one
+    </Link>
+  </p>
+</div>
       </div>
     </div>
   );
