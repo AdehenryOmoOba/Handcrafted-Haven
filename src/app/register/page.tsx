@@ -13,7 +13,8 @@ export default function RegisterPage() {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e) => {
+  // ✅ Fixed: Properly typed event parameter
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -21,7 +22,13 @@ export default function RegisterPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // ✅ Also type the checkbox handler
+  const handleTermsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAgreeToTerms(e.target.checked);
+  };
+
+  // ✅ Type the form submit handler
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     
@@ -40,8 +47,6 @@ export default function RegisterPage() {
         agreeToTerms 
       });
       setIsLoading(false);
-      // Here you would typically handle registration
-      // e.g., redirect to dashboard or show success message
     }, 1500);
   };
 
@@ -132,7 +137,7 @@ export default function RegisterPage() {
               name="terms"
               type="checkbox"
               checked={agreeToTerms}
-              onChange={(e) => setAgreeToTerms(e.target.checked)}
+              onChange={handleTermsChange}
               className="h-4 w-4 text-primary focus:ring-primary border-charcoal/30 rounded mt-1"
               required
             />
@@ -197,7 +202,7 @@ export default function RegisterPage() {
             <span className="sr-only">Sign up with Apple</span>
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
               <path d="M17.733 12.23c.013-.137.225-1.538-.687-2.288-.94-.773-2.08-.334-2.687-.11-.61.225-3.877 1.47-3.91 3.638-.033 2.135 3.03 2.94 3.188 2.989.158.05 4.41-1.538 4.096-4.229zm-5.728-1.24c.25-.737.388-1.662-.362-2.412C10.778 7.713 9.578 7.613 8.713 8.238c-1.95.987-2.6 3.837-1.05 5.45.925.962 2.288.937 3.025.525.738-.413 2.225-1.625 2.325-2.963z"/>
-              <path d="M0 12C0 5.373 5.373 0 12 0s12 5.373 12 12-5.373 12-12 12S0 18.627 0 12z" fill="none"/>
+              <path d="M0 12C0 5.373 5.373 0 12 0s12 5.365 12 12-5.373 12-12 12S0 18.627 0 12z" fill="none"/>
             </svg>
           </button>
         </div>
