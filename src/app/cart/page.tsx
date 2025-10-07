@@ -72,9 +72,9 @@ export default function CartPage() {
             <h2 className="font-serif text-2xl font-bold text-deep-forest mb-4">
               Your cart is empty
             </h2>
-            <p className="text-charcoal mb-8 max-w-md mx-auto">
-              Looks like you haven't added any items yet. Start shopping to fill your cart with beautiful handcrafted treasures!
-            </p>
+             <p className="text-charcoal mb-8 max-w-md mx-auto">
+      Looks like you haven{`'`}t added any items yet. Start shopping to fill your cart with beautiful handcrafted treasures!
+    </p>
             <Link
               href="/products"
               className="px-6 py-3 bg-primary text-pure-white rounded-lg hover:bg-deep-forest transition-colors duration-200 font-medium inline-block"
