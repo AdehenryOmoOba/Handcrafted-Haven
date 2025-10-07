@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useCart } from '@/context/CartContext';
 
 // Define 21 categories
 const categories = [
@@ -49,6 +50,8 @@ export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState('jewelry'); // Default to first category
 
   const productsToShow = allProducts[selectedCategory] || [];
+
+   const { addToCart } = useCart();
 
   return (
     <div className="min-h-screen bg-light-gray py-8">
@@ -109,9 +112,18 @@ export default function ProductsPage() {
                       <p className="text-charcoal text-sm mb-4">{product.description}</p>
                       <div className="flex justify-between items-center">
                         <span className="text-2xl font-bold text-primary">${product.price}</span>
-                        <button className="px-4 py-2 bg-accent text-pure-white rounded-lg hover:bg-primary transition-colors duration-200 text-sm font-medium">
-                          Add to Cart
-                        </button>
+                         <button
+    key={product.id}
+    onClick={() => addToCart({
+      id: product.id,
+      name: product.name,
+      price: parseFloat(product.price),
+      category: product.category // Make sure this matches your category IDs
+    })}
+    className="px-4 py-2 bg-accent text-pure-white rounded-lg hover:bg-primary transition-colors duration-200 text-sm font-medium"
+  >
+    Add to Cart
+  </button>
                       </div>
                     </div>
                   </div>
