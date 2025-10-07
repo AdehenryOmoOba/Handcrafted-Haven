@@ -9,7 +9,8 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  // ✅ Fixed: Properly typed event parameter
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     
@@ -17,9 +18,20 @@ export default function LoginPage() {
     setTimeout(() => {
       console.log('Login attempt:', { email, password, rememberMe });
       setIsLoading(false);
-      // Here you would typically handle authentication
-      // e.g., redirect to dashboard or show error
     }, 1500);
+  };
+
+  // ✅ Also type your change handlers
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
+  const handleRememberMeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRememberMe(e.target.checked);
   };
 
   return (
@@ -47,7 +59,7 @@ export default function LoginPage() {
                 autoComplete="email"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleEmailChange}
                 className="w-full px-4 py-3 border border-charcoal/20 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors duration-200"
                 placeholder="you@example.com"
               />
@@ -69,7 +81,7 @@ export default function LoginPage() {
                 autoComplete="current-password"
                 required
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handlePasswordChange}
                 className="w-full px-4 py-3 border border-charcoal/20 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-colors duration-200"
                 placeholder="••••••••"
               />
@@ -82,7 +94,7 @@ export default function LoginPage() {
               name="remember-me"
               type="checkbox"
               checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
+              onChange={handleRememberMeChange}
               className="h-4 w-4 text-primary focus:ring-primary border-charcoal/30 rounded"
             />
             <label htmlFor="remember-me" className="ml-2 block text-sm text-charcoal">
@@ -139,19 +151,19 @@ export default function LoginPage() {
             <span className="sr-only">Sign in with Apple</span>
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
               <path d="M17.733 12.23c.013-.137.225-1.538-.687-2.288-.94-.773-2.08-.334-2.687-.11-.61.225-3.877 1.47-3.91 3.638-.033 2.135 3.03 2.94 3.188 2.989.158.05 4.41-1.538 4.096-4.229zm-5.728-1.24c.25-.737.388-1.662-.362-2.412C10.778 7.713 9.578 7.613 8.713 8.238c-1.95.987-2.6 3.837-1.05 5.45.925.962 2.288.937 3.025.525.738-.413 2.225-1.625 2.325-2.963z"/>
-              <path d="M0 12C0 5.373 5.373 0 12 0s12 5.373 12 12-5.373 12-12 12S0 18.627 0 12z" fill="none"/>
+              <path d="M0 12C0 5.373 5.373 0 12 0s12 5.365 12 12-5.373 12-12 12S0 18.627 0 12z" fill="none"/>
             </svg>
           </button>
         </div>
 
         <div className="text-center mt-6">
-  <p className="text-charcoal text-sm">
-    Don{`'`}t have an account?{' '}
-    <Link href="/register" className="font-medium text-primary hover:text-deep-forest transition-colors duration-200">
-      Create one
-    </Link>
-  </p>
-</div>
+          <p className="text-charcoal text-sm">
+            Don{`'`}t have an account?{' '}
+            <Link href="/register" className="font-medium text-primary hover:text-deep-forest transition-colors duration-200">
+              Create one
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
