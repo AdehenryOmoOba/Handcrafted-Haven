@@ -1,11 +1,27 @@
-'use client'; // Required for useState and interactivity
+'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 
+// Define types
+type Category = {
+  id: string;
+  name: string;
+  icon: string;
+};
+
+type Product = {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  icon: string;
+  category: string; // Added missing category property
+};
+
 // Define 21 categories
-const categories = [
+const categories: Category[] = [
   { id: 'jewelry', name: 'Jewelry', icon: '💎' },
   { id: 'pottery', name: 'Pottery', icon: '🏺' },
   { id: 'textiles', name: 'Textiles', icon: '🧵' },
@@ -29,29 +45,29 @@ const categories = [
   { id: 'resin', name: 'Resin Art', icon: '🌀' }
 ];
 
-// Generate 10 sample products for each category
-const generateProducts = (categoryId, categoryName) => {
+// ✅ Fixed: Added proper type annotations
+const generateProducts = (categoryId: string, categoryName: string): Product[] => {
   return Array.from({ length: 10 }, (_, i) => ({
     id: `${categoryId}-${i + 1}`,
     name: `${categoryName} Item ${i + 1}`,
     description: `Beautiful handcrafted ${categoryName.toLowerCase()} piece made with love and attention to detail.`,
     price: (25 + i * 5).toFixed(2), // $25, $30, $35, etc.
-    icon: categories.find(c => c.id === categoryId)?.icon || '✨'
+    icon: categories.find(c => c.id === categoryId)?.icon || '✨',
+    category: categoryId // ✅ Added missing category property
   }));
 };
 
 // Pre-generate all products
-const allProducts = {};
+const allProducts: Record<string, Product[]> = {};
 categories.forEach(cat => {
   allProducts[cat.id] = generateProducts(cat.id, cat.name);
 });
 
 export default function ProductsPage() {
-  const [selectedCategory, setSelectedCategory] = useState('jewelry'); // Default to first category
+  const [selectedCategory, setSelectedCategory] = useState<string>('jewelry');
+  const { addToCart } = useCart();
 
   const productsToShow = allProducts[selectedCategory] || [];
-
-   const { addToCart } = useCart();
 
   return (
     <div className="min-h-screen bg-light-gray py-8">
@@ -112,18 +128,17 @@ export default function ProductsPage() {
                       <p className="text-charcoal text-sm mb-4">{product.description}</p>
                       <div className="flex justify-between items-center">
                         <span className="text-2xl font-bold text-primary">${product.price}</span>
-                         <button
-    key={product.id}
-    onClick={() => addToCart({
-      id: product.id,
-      name: product.name,
-      price: parseFloat(product.price),
-      category: product.category // Make sure this matches your category IDs
-    })}
-    className="px-4 py-2 bg-accent text-pure-white rounded-lg hover:bg-primary transition-colors duration-200 text-sm font-medium"
-  >
-    Add to Cart
-  </button>
+                        <button
+                          onClick={() => addToCart({
+                            id: product.id,
+                            name: product.name,
+                            price: parseFloat(product.price),
+                            category: product.category
+                          })}
+                          className="px-4 py-2 bg-accent text-pure-white rounded-lg hover:bg-primary transition-colors duration-200 text-sm font-medium"
+                        >
+                          Add to Cart
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -132,8 +147,6 @@ export default function ProductsPage() {
             ) : (
               <p className="text-charcoal">No products found in this category.</p>
             )}
-
-          
           </main>
         </div>
       </div>
