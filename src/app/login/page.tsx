@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { signIn } from 'next-auth/react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -13,12 +14,22 @@ export default function LoginPage() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Login attempt:', { email, password, rememberMe });
-      setIsLoading(false);
-    }, 1500);
+    // Use NextAuth signIn with credentials provider
+    signIn('credentials', { redirect: false, email, password })
+      .then((result) => {
+        setIsLoading(false);
+        if (result?.error) {
+          alert(result.error || 'Invalid credentials');
+          return;
+        }
+        // Successful sign in — redirect to account page
+        window.location.href = '/account';
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        console.error(err);
+        alert('Sign in failed');
+      });
   };
 
   // ✅ Also type your change handlers

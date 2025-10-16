@@ -1,73 +1,85 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
+import { Category, ProductWithDetails } from '@/lib/definitions';
 
-// Define types
-type Category = {
-  id: string;
-  name: string;
-  icon: string;
+// Category icons mapping
+const categoryIcons: Record<string, string> = {
+  'jewelry': '💎',
+  'pottery': '🏺',
+  'textiles': '🧵',
+  'woodwork': '🪵',
+  'art-decor': '🎨',
 };
-
-type Product = {
-  id: string;
-  name: string;
-  description: string;
-  price: string;
-  icon: string;
-  category: string; // Added missing category property
-};
-
-// Define 21 categories
-const categories: Category[] = [
-  { id: 'jewelry', name: 'Jewelry', icon: '💎' },
-  { id: 'pottery', name: 'Pottery', icon: '🏺' },
-  { id: 'textiles', name: 'Textiles', icon: '🧵' },
-  { id: 'woodwork', name: 'Woodwork', icon: '🪵' },
-  { id: 'candles', name: 'Candles', icon: '🕯️' },
-  { id: 'soap', name: 'Soap', icon: '🧼' },
-  { id: 'leather', name: 'Leather Goods', icon: '👜' },
-  { id: 'glass', name: 'Glass Art', icon: '🫙' },
-  { id: 'metalwork', name: 'Metalwork', icon: '⚙️' },
-  { id: 'basketry', name: 'Basketry', icon: '🧺' },
-  { id: 'printmaking', name: 'Printmaking', icon: '🎨' },
-  { id: 'embroidery', name: 'Embroidery', icon: '🪡' },
-  { id: 'calligraphy', name: 'Calligraphy', icon: '✒️' },
-  { id: 'paper', name: 'Paper Crafts', icon: '📄' },
-  { id: 'macrame', name: 'Macramé', icon: '🪢' },
-  { id: 'dyes', name: 'Natural Dyes', icon: '🌿' },
-  { id: 'toys', name: 'Toy Making', icon: '🧸' },
-  { id: 'bookbinding', name: 'Bookbinding', icon: '📚' },
-  { id: 'enamel', name: 'Enamel Art', icon: '🔥' },
-  { id: 'mosaic', name: 'Mosaic', icon: '🪩' },
-  { id: 'resin', name: 'Resin Art', icon: '🌀' }
-];
-
-// ✅ Fixed: Added proper type annotations
-const generateProducts = (categoryId: string, categoryName: string): Product[] => {
-  return Array.from({ length: 10 }, (_, i) => ({
-    id: `${categoryId}-${i + 1}`,
-    name: `${categoryName} Item ${i + 1}`,
-    description: `Beautiful handcrafted ${categoryName.toLowerCase()} piece made with love and attention to detail.`,
-    price: (25 + i * 5).toFixed(2), // $25, $30, $35, etc.
-    icon: categories.find(c => c.id === categoryId)?.icon || '✨',
-    category: categoryId // ✅ Added missing category property
-  }));
-};
-
-// Pre-generate all products
-const allProducts: Record<string, Product[]> = {};
-categories.forEach(cat => {
-  allProducts[cat.id] = generateProducts(cat.id, cat.name);
-});
 
 export default function ProductsPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>('jewelry');
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [products, setProducts] = useState<ProductWithDetails[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { addToCart } = useCart();
 
-  const productsToShow = allProducts[selectedCategory] || [];
+  // Fetch categories on component mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/categories');
+        if (!response.ok) throw new Error('Failed to fetch categories');
+        const data = await response.json();
+        setCategories(data);
+        if (data.length > 0) {
+          setSelectedCategory(data[0].id);
+        }
+      } catch (err) {
+        setError('Failed to load categories');
+        console.error('Error fetching categories:', err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // Fetch products when category changes
+  useEffect(() => {
+    if (!selectedCategory) return;
+
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`/api/products?category_id=${selectedCategory}&per_page=20`);
+        if (!response.ok) throw new Error('Failed to fetch products');
+        const data = await response.json();
+        setProducts(data.data || []);
+      } catch (err) {
+        setError('Failed to load products');
+        console.error('Error fetching products:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [selectedCategory]);
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-light-gray py-8 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-deep-forest mb-4">Error Loading Products</h1>
+          <p className="text-charcoal">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-4 px-4 py-2 bg-primary text-pure-white rounded-lg hover:bg-deep-forest transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-light-gray py-8">
@@ -96,7 +108,7 @@ export default function ProductsPage() {
                       : 'text-charcoal hover:bg-cream'
                   }`}
                 >
-                  <span className="mr-2">{category.icon}</span>
+                  <span className="mr-2">{categoryIcons[category.slug] || '✨'}</span>
                   {category.name}
                 </button>
               ))}
@@ -111,31 +123,44 @@ export default function ProductsPage() {
               </h2>
             </div>
 
-            {productsToShow.length > 0 ? (
+            {loading ? (
+              <div className="flex justify-center items-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              </div>
+            ) : products.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {productsToShow.map((product) => (
+                {products.map((product) => (
                   <div
                     key={product.id}
                     className="bg-pure-white rounded-xl shadow-card overflow-hidden hover:shadow-lg transition-shadow duration-200"
                   >
-                    <div className="h-64 bg-gradient-to-br from-sage-green to-secondary flex items-center justify-center">
-                      <span className="text-6xl text-pure-white">{product.icon}</span>
-                    </div>
+                    <Link href={`/products/${product.slug}`}>
+                      <div className="h-64 bg-gradient-to-br from-sage-green to-secondary flex items-center justify-center cursor-pointer">
+                        <span className="text-6xl text-pure-white">
+                          {categoryIcons[categories.find(c => c.id === product.category_id)?.slug || ''] || '✨'}
+                        </span>
+                      </div>
+                    </Link>
                     <div className="p-6">
-                      <h3 className="font-serif text-xl font-semibold text-deep-forest mb-2">
-                        {product.name}
-                      </h3>
-                      <p className="text-charcoal text-sm mb-4">{product.description}</p>
+                      <Link href={`/products/${product.slug}`}>
+                        <h3 className="font-serif text-xl font-semibold text-deep-forest mb-2 hover:text-primary cursor-pointer">
+                          {product.name}
+                        </h3>
+                      </Link>
+                      <p className="text-charcoal text-sm mb-2">
+                        by {product.artisan?.business_name || 'Unknown Artisan'}
+                      </p>
+                      <p className="text-charcoal text-sm mb-4 line-clamp-3">{product.description}</p>
                       <div className="flex justify-between items-center">
                         <span className="text-2xl font-bold text-primary">${product.price}</span>
                         <button
                           onClick={() => addToCart({
                             id: product.id,
                             name: product.name,
-                            price: parseFloat(product.price),
-                            category: product.category
+                            price: product.price,
+                            category: product.category_id
                           })}
-                          className="px-4 py-2 bg-accent text-pure-white rounded-lg hover:bg-primary transition-colors duration-200 text-sm font-medium"
+                          className="px-4 py-2 bg-accent text-pure-white rounded-lg hover:bg-primary hover:text-pure-white transition-colors duration-200 text-sm font-medium"
                         >
                           Add to Cart
                         </button>
@@ -145,7 +170,10 @@ export default function ProductsPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-charcoal">No products found in this category.</p>
+              <div className="text-center py-12">
+                <p className="text-charcoal text-lg">No products found in this category.</p>
+                <p className="text-charcoal text-sm mt-2">Try selecting a different category or check back later.</p>
+              </div>
             )}
           </main>
         </div>

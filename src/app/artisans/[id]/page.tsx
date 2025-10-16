@@ -128,7 +128,7 @@ export default async function ArtisanProfilePage({ params }: { params: Promise<{
           {user?.email && (
             <a
               href={`mailto:${user.email}`}
-              className="inline-block mt-2 px-6 py-2 bg-accent text-pure-white rounded-lg hover:bg-primary transition-colors duration-200 font-medium text-sm shadow-md"
+              className="inline-block mt-2 px-6 py-2 bg-accent text-pure-white rounded-lg hover:bg-primary hover:text-pure-white transition-colors duration-200 font-medium text-sm shadow-md"
               aria-label={`Contact ${artisan.business_name}`}
             >
               Contact Artisan

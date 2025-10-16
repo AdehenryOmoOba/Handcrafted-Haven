@@ -39,15 +39,27 @@ export default function RegisterPage() {
       return;
     }
     
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Registration attempt:', { 
-        name: formData.name, 
-        email: formData.email, 
-        agreeToTerms 
+    // Call real register API
+    fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: formData.name, email: formData.email, password: formData.password }),
+    })
+      .then(async (res) => {
+        setIsLoading(false);
+        if (res.ok) {
+          // Redirect to login
+          window.location.href = '/login';
+        } else {
+          const payload = await res.json().catch(() => ({}));
+          alert(payload.error || 'Failed to register');
+        }
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        console.error(err);
+        alert('Failed to register');
       });
-      setIsLoading(false);
-    }, 1500);
   };
 
   return (

@@ -1,0 +1,5 @@
+Implementation list:
+- Register, Login, and Logout - Done
+- Product fetching from database - Done
+- Product Rating - Done
+- Add to Cart - Done

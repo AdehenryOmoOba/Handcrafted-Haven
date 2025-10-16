@@ -24,40 +24,67 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   // Load from localStorage on mount
   useEffect(() => {
+    setIsHydrated(true);
     const saved = typeof window !== 'undefined' ? localStorage.getItem('cartItems') : null;
     if (saved) {
       try {
         setCartItems(JSON.parse(saved));
-      } catch (e) {
+      } catch {
         console.error('Failed to parse cart items');
         setCartItems([]);
       }
     }
   }, []);
 
-  // Save to localStorage whenever cartItems changes
+  // Save to localStorage whenever cartItems changes (only after hydration)
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (isHydrated && typeof window !== 'undefined') {
       localStorage.setItem('cartItems', JSON.stringify(cartItems));
     }
-  }, [cartItems]);
+  }, [cartItems, isHydrated]);
 
   // Compute cartCount from cartItems (no separate state needed)
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-  const addToCart = (item: Omit<CartItem, 'quantity'>) => {
+  const addToCart = async (item: Omit<CartItem, 'quantity'>) => {
+    // Ensure price is a number
+    const normalizedItem = {
+      ...item,
+      price: typeof item.price === 'string' ? parseFloat(item.price) : item.price
+    };
+
+    // Optimistic update
     setCartItems(prev => {
-      const existing = prev.find(i => i.id === item.id);
+      const existing = prev.find(i => i.id === normalizedItem.id);
       if (existing) {
         return prev.map(i =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+          i.id === normalizedItem.id ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
-      return [...prev, { ...item, quantity: 1 }];
+      return [...prev, { ...normalizedItem, quantity: 1 }];
     });
+
+    // Sync with backend
+    try {
+      const response = await fetch('/api/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ product_id: item.id, quantity: 1 }),
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        console.error('Failed to add to cart:', error);
+        // Could revert optimistic update here if needed
+      }
+    } catch (error) {
+      console.error('Add to cart error:', error);
+      // Cart still works with localStorage as fallback
+    }
   };
 
   const updateQuantity = (id: string, quantity: number) => {

@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 export default function CategoriesPage() {
   const categories = [
     { name: 'Jewelry', icon: '💎', description: 'Handcrafted rings, necklaces, and accessories' },

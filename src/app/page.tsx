@@ -1,6 +1,69 @@
+'use client';
+
 import Link from 'next/link';
+import { useCart } from '@/context/CartContext';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
+  const { addToCart } = useCart();
+  const [userRatings, setUserRatings] = useState<Record<string, number>>({});
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Load user ratings from localStorage on mount
+  useEffect(() => {
+    setIsHydrated(true);
+    const savedRatings = localStorage.getItem('userProductRatings');
+    if (savedRatings) {
+      try {
+        setUserRatings(JSON.parse(savedRatings));
+      } catch (error) {
+        console.error('Failed to parse saved ratings:', error);
+      }
+    }
+  }, []);
+
+  // Save user ratings to localStorage whenever they change (only after hydration)
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem('userProductRatings', JSON.stringify(userRatings));
+    }
+  }, [userRatings, isHydrated]);
+
+  // Handle star click
+  const handleStarClick = (productId: string, rating: number) => {
+    setUserRatings(prev => ({
+      ...prev,
+      [productId]: rating
+    }));
+  };
+
+  // Featured products for user rating
+  const featuredProducts = [
+    {
+      id: 'featured-1',
+      name: 'Handcrafted Silver Ring',
+      description: 'Beautiful handcrafted silver ring made with love and attention to detail.',
+      price: 49.99,
+      category: 'jewelry',
+      icon: '💍'
+    },
+    {
+      id: 'featured-2', 
+      name: 'Ceramic Coffee Mug',
+      description: 'Unique ceramic coffee mug perfect for your morning routine.',
+      price: 29.99,
+      category: 'pottery',
+      icon: '☕'
+    },
+    {
+      id: 'featured-3',
+      name: 'Wooden Cutting Board',
+      description: 'Premium wooden cutting board crafted from sustainable materials.',
+      price: 39.99,
+      category: 'woodwork',
+      icon: '🪵'
+    }
+  ];
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -24,7 +87,7 @@ export default function Home() {
               </Link>
               <Link
                 href="/artisans"
-                className="px-8 py-3 border-2 border-primary text-primary rounded-lg hover:bg-primary hover:text-pure-white transition-colors duration-200 font-medium text-lg"
+                className="px-8 py-3 border-2 border-primary text-primary bg-transparent rounded-lg hover:bg-primary hover:!text-white hover:border-primary transition-all duration-200 font-medium text-lg"
               >
                 Meet Artisans
               </Link>
@@ -79,21 +142,55 @@ export default function Home() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3].map((item) => (
-              <div key={item} className="bg-pure-white rounded-xl shadow-card overflow-hidden hover:shadow-lg transition-shadow duration-200">
+            {featuredProducts.map((product) => (
+              <div key={product.id} className="bg-pure-white rounded-xl shadow-card overflow-hidden hover:shadow-lg transition-shadow duration-200">
                 <div className="h-64 bg-gradient-to-br from-sage-green to-secondary flex items-center justify-center">
-                  <span className="text-6xl text-pure-white">🎨</span>
+                  <span className="text-6xl text-pure-white">{product.icon}</span>
                 </div>
                 <div className="p-6">
                   <h3 className="font-serif text-xl font-semibold text-deep-forest mb-2">
-                    Handcrafted Item {item}
+                    {product.name}
                   </h3>
+                  
+                  {/* Interactive Rating Stars */}
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          onClick={() => handleStarClick(product.id, star)}
+                          className={`text-lg hover:text-yellow-300 transition-colors cursor-pointer ${
+                            star <= (userRatings[product.id] || 0) ? 'text-yellow-400' : 'text-gray-300'
+                          }`}
+                          title={`Rate ${star} star${star > 1 ? 's' : ''}`}
+                        >
+                          ★
+                        </button>
+                      ))}
+                    </div>
+                    <span className="text-sm text-charcoal">
+                      {userRatings[product.id] ? (
+                        `Your rating: ${userRatings[product.id]} star${userRatings[product.id] > 1 ? 's' : ''}`
+                      ) : (
+                        'Click to rate'
+                      )}
+                    </span>
+                  </div>
+                  
                   <p className="text-charcoal text-sm mb-4">
-                    Beautiful handcrafted piece made with love and attention to detail.
+                    {product.description}
                   </p>
                   <div className="flex justify-between items-center">
-                    <span className="text-2xl font-bold text-primary">$49.99</span>
-                    <button className="px-4 py-2 bg-accent text-pure-white rounded-lg hover:bg-primary transition-colors duration-200 text-sm font-medium">
+                    <span className="text-2xl font-bold text-primary">${product.price}</span>
+                    <button 
+                      onClick={() => addToCart({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        category: product.category
+                      })}
+                      className="px-4 py-2 bg-accent text-pure-white rounded-lg hover:bg-primary hover:text-pure-white transition-colors duration-200 text-sm font-medium"
+                    >
                       Add to Cart
                     </button>
                   </div>
